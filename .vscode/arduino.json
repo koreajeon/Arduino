@@ -1,5 +1,5 @@
 {
-    "sketch": "PJ5.3_debounce/PJ5.3_debounce.ino",
+    "sketch": "PJ5.4.2_OnOff/PJ5.4.2_OnOff.ino",
     "board": "arduino:avr:uno",
     "port": "COM3"
 }

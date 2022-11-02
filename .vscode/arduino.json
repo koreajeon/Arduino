@@ -1,5 +1,5 @@
 {
-    "sketch": "PJ5.6_analog_value/PJ5.6_analog_value.ino",
+    "sketch": "PS6.9.2_withoutLibrary/PS6.9.2_withoutLibrary.ino",
     "board": "arduino:avr:uno",
     "port": "COM3"
 }

@@ -1,0 +1,56 @@
+/* 파일: ARD_Multifunction_Shield_Buzzer_Example
+   날짜: 28/05/14
+   버전: 0.1
+
+개정:
+28/05/14 버전 0.1 생성
+
+이것은 Hobby Components Arduino 호환에서 버저를 사용하는 방법의 예입니다.
+
+다기능 실험자 방패(HCARDU0085).
+
+스케치는 버저를 사용하여 다음에 따라 반복 속도로 '핑'을 생성합니다.
+10K 전위차계의 현재 위치.
+
+원하는 방식으로 이 코드를 복사, 변경 및 재사용할 수 있지만 그대로 두십시오.
+이 코드를 재배포하는 경우 주석에 HobbyComponents.com을 참조하세요.
+이 소프트웨어는 다음과 같은 제품을 판매할 목적으로 직접 사용할 수 없습니다.
+Hobby Components Ltd의 자체 제품 범위와 직접 경쟁합니다.
+
+이 소프트웨어는 "있는 그대로" 제공됩니다. 취미 구성 요소는 어떠한 보증도 하지 않습니다.
+의 묵시적 보증을 포함하되 이에 국한되지 않는 명시적, 묵시적 또는 법적
+특정 목적에 대한 상품성 및 적합성, 정확성 또는 과실 부족.
+취미 구성 요소는 어떠한 경우에도 어떠한 손해에 대해서도 책임을 지지 않습니다.
+특별, 부수적 또는 결과적 손해를 포함하되 이에 국한되지 않음
+이유는 무엇이든.
+*/
+
+
+/* 전위차계를 읽는 데 사용되는 아날로그 핀 정의 */
+#define POT_DIO 0
+
+/* 부저 제어에 사용되는 디지털 핀 정의 */
+#define BUZZER_DIO 3
+
+#define OFF HIGH
+#define ON LOW
+
+void setup()
+{
+  /* 버저 핀을 출력으로 설정하고 버저를 끕니다. */
+  pinMode(BUZZER_DIO, OUTPUT);
+  digitalWrite(BUZZER_DIO, OFF);
+}
+
+/* Main Program */
+void loop()
+{
+  /* 10K 전위차계의 현재 위치를 읽고 사용
+      시간 지연으로 */
+  delay(analogRead(POT_DIO));
+  
+  /* 부저를 20ms 동안 켠 다음 다시 끕니다. */
+  digitalWrite(BUZZER_DIO, ON);
+  delay(20);
+  digitalWrite(BUZZER_DIO, OFF);
+}

@@ -1,0 +1,100 @@
+/* 파일: ARD_Multifunction_Shield_Seven_Segment_Example
+   날짜: 28/05/14
+   버전: 0.1
+   
+개정:
+
+28/05/14 버전 0.1 생성
+
+취미에서 4자리 7세그먼트 표시를 사용하는 예입니다.
+구성 요소 Arduino 호환 다기능 실험자 쉴드(HCARDU0085).
+
+이 예제 스케치는 7세그먼트 LED 디스플레이에 10진수를 표시합니다.
+100ms마다 1씩 증가합니다.
+
+원하는 방식으로 이 코드를 복사, 변경 및 재사용할 수 있지만 그대로 두십시오.
+이 코드를 재배포하는 경우 주석에 HobbyComponents.com을 참조하세요.
+이 소프트웨어는 제품을 홍보하거나 판매할 목적으로 사용할 수 없습니다.
+Hobby Components Ltd의 자체 제품 범위와 직접 경쟁합니다.
+
+이 소프트웨어는 "있는 그대로" 제공됩니다. 취미 구성 요소는 어떠한 보증도 하지 않습니다.
+의 묵시적 보증을 포함하되 이에 국한되지 않는 명시적, 묵시적 또는 법적
+특정 목적에 대한 상품성 및 적합성, 정확성 또는 과실 부족.
+취미 구성 요소는 어떠한 경우에도 어떠한 손해에 대해서도 책임을 지지 않습니다.
+특별, 부수적 또는 결과적 손해를 포함하되 이에 국한되지 않음
+이유는 무엇이든.
+*/
+
+
+/* 7세그먼트 디스플레이에 사용되는 시프트 레지스터 핀 정의 */
+#define LATCH_DIO 4
+#define CLK_DIO 7
+#define DATA_DIO 8
+ 
+/* 숫자 0에서 9에 대한 세그먼트 바이트 맵 */
+const byte SEGMENT_MAP[] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0X80,0X90};
+/* 바이트 맵은 숫자 1~4를 선택합니다. */
+const byte SEGMENT_SELECT[] = {0xF1,0xF2,0xF4,0xF8};
+
+
+unsigned long currentTime; // 현재 시간을 ms에 저장합니다
+unsigned long previousTime; // 카운터가 마지막으로 업데이트된 마지막 시간을 ms 단위로 저장합니다.
+int Count; // 표시될 값을 저장합니다.
+
+void setup ()
+{
+  /* DIO 핀을 출력으로 설정 */
+  pinMode(LATCH_DIO,OUTPUT);
+  pinMode(CLK_DIO,OUTPUT);
+  pinMode(DATA_DIO,OUTPUT); 
+  
+  /* 현재 시간과 카운트를 저장하는 데 사용되는 레지스터를 초기화합니다. */
+  currentTime = millis();
+  previousTime = 0;
+  Count = 0;
+}
+
+/* 주요 프로그램 */
+void loop()
+{
+ 
+  /* 밀리초 단위로 시간이 얼마나 지났는지 확인 */
+  currentTime = millis();
+  
+  /* 100ms가 지나면 카운터에 1을 추가합니다. */
+  if(currentTime - previousTime > 100)
+  {
+
+    previousTime = currentTime;
+    
+    if(Count < 9999)
+    {
+      Count++;
+    } else
+    {
+      Count = 0;
+    }
+  }
+  
+  /* 현재 카운터 값으로 디스플레이 업데이트 */
+  WriteNumber(Count);
+}
+
+
+/* 디스플레이에 0에서 9999 사이의 10진수를 씁니다. */
+void WriteNumber(int Number)
+{
+  WriteNumberToSegment(0 , Number / 1000);
+  WriteNumberToSegment(1 , (Number / 100) % 10);
+  WriteNumberToSegment(2 , (Number / 10) % 10);
+  WriteNumberToSegment(3 , Number % 10);
+}
+
+/* 디스플레이의 4자리 숫자 중 하나에 0에서 9 사이의 10진수를 쓰십시오. */
+void WriteNumberToSegment(byte Segment, byte Value)
+{
+  digitalWrite(LATCH_DIO,LOW); 
+  shiftOut(DATA_DIO, CLK_DIO, MSBFIRST, SEGMENT_MAP[Value]);
+  shiftOut(DATA_DIO, CLK_DIO, MSBFIRST, SEGMENT_SELECT[Segment] );
+  digitalWrite(LATCH_DIO,HIGH);    
+}

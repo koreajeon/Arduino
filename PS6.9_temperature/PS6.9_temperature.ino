@@ -1,7 +1,5 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <Time.h>
-#include <DS1307RTC.h> 
 
 #define ONE_WIRE_BUS 5
 
@@ -20,12 +18,6 @@ void setup(void)
   Serial.begin(9600);
   pinMode(pin,INPUT);
   sensors.begin();  
-  setSyncProvider(RTC.get);  
-  setTime(10,49,0,02,11,22);
-  if(timeStatus()!= timeSet) 
-     Serial.println("Unable RTC");
-  else
-     Serial.println("time start");  
 }
 
 void loop(void)
@@ -38,8 +30,7 @@ void loop(void)
   delayMicroseconds(480);
 
   pinMode(pin,INPUT);
-  digitalClockDisplay();  
-  delay(1000);
+
   previousTime=micros();
 
   while(!digitalRead(pin)){};
@@ -60,25 +51,4 @@ void loop(void)
  
   
   delay(500);
-}
-
-
-void digitalClockDisplay(){
-  Serial.print(hour());
-  printDigits(minute());
-  printDigits(second());
-  Serial.print(" ");
-  Serial.print(day());
-  Serial.print(" ");
-  Serial.print(month());
-  Serial.print(" ");
-  Serial.print(year()); 
-  Serial.println(); 
-}
-
-void printDigits(int digits){
-  Serial.print(":");
-  if(digits < 10)
-    Serial.print('0');
-  Serial.print(digits);
 }
